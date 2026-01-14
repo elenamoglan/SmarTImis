@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Map as MapIcon, Bell, User, LogOut, Check, Menu, X } from 'lucide-react';
+import { Bell, User, LogOut, Check, Menu, X } from 'lucide-react';
 import axios from 'axios';
+import logo from '../assets/logo.png';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -102,10 +103,9 @@ const Navbar = () => {
              </button>
 
             <Link to="/" className="flex-shrink-0 flex items-center gap-2">
-              <div className="bg-blue-600 p-1.5 rounded-lg text-white">
-                 <MapIcon size={20} />
-              </div>
-              <span className="font-bold text-xl text-gray-900 hidden sm:block">SmartCity</span>
+                <div className="bg-blue-600 p-2 rounded-lg">
+                    <img src={logo} alt="SmartCity Logo" className="h-8 w-auto" />
+                </div>
             </Link>
           </div>
 

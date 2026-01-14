@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
-import { Map as MapIcon, ArrowLeft, Eye, EyeOff, UserPlus } from 'lucide-react';
+import { ArrowLeft, Eye, EyeOff, UserPlus } from 'lucide-react';
+import logo from '../assets/logo.png';
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -29,10 +30,9 @@ const Register = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Link to="/" className="flex items-center gap-2">
-                <div className="bg-blue-600 p-1.5 rounded-lg text-white">
-                    <MapIcon size={24} />
+                <div className="bg-blue-600 p-2 rounded-lg">
+                    <img src={logo} alt="SmartCity Logo" className="h-8 w-auto" />
                 </div>
-                <span className="text-xl font-bold text-gray-900">SmartCity</span>
             </Link>
           </div>
           <div className="flex items-center gap-4">

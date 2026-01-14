@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { MapPin, FileText, Shield, Map as MapIcon, CheckCircle } from 'lucide-react';
+import { MapPin, FileText, Shield, CheckCircle } from 'lucide-react';
+import logo from '../assets/logo.png';
 
 const LandingPage = () => {
   return (
@@ -9,10 +10,11 @@ const LandingPage = () => {
       <header className="fixed top-0 left-0 right-0 bg-white z-50 border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="bg-blue-600 p-1.5 rounded-lg text-white">
-               <MapIcon size={24} />
-            </div>
-            <span className="text-xl font-bold text-gray-900">SmartCity</span>
+            <Link to="/" className="flex items-center gap-2">
+              <div className="bg-blue-600 p-2 rounded-lg">
+                <img src={logo} alt="SmartCity Logo" className="h-8 w-auto" />
+              </div>
+            </Link>
           </div>
           <div className="flex items-center gap-4">
             <Link to="/login" className="text-gray-600 hover:text-gray-900 font-medium text-sm">
@@ -136,10 +138,9 @@ const LandingPage = () => {
       <footer className="bg-white py-8 border-t border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-                <div className="text-blue-600">
-                    <MapIcon size={20} />
-                </div>
-                <span className="font-bold text-gray-800">SmartCity</span>
+              <div className="bg-blue-600 p-2 rounded-lg">
+                <img src={logo} alt="SmartCity Logo" className="h-6 w-auto" />
+              </div>
             </div>
             <p className="text-sm text-gray-500">
                 © 2024 SmartCity. Building better communities together.
