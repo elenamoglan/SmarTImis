@@ -32,6 +32,7 @@ const Login = () => {
                 <div className="bg-blue-600 p-2 rounded-lg">
                     <img src={logo} alt="SmartCity Logo" className="h-8 w-auto" />
                 </div>
+                <span className="font-bold text-xl text-gray-900">SmarTimis</span>
             </Link>
           </div>
           <div className="flex items-center gap-4">

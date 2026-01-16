@@ -106,6 +106,7 @@ const Navbar = () => {
                 <div className="bg-blue-600 p-2 rounded-lg">
                     <img src={logo} alt="SmartCity Logo" className="h-8 w-auto" />
                 </div>
+                <span className="font-bold text-xl text-gray-900 hidden sm:block">SmarTimis</span>
             </Link>
           </div>
 

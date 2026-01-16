@@ -30,9 +30,10 @@ const Register = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Link to="/" className="flex items-center gap-2">
-                <div className="bg-blue-600 p-2 rounded-lg">
+                <div className="bg-blue-600 p-2 rounded-lg text-white">
                     <img src={logo} alt="SmartCity Logo" className="h-8 w-auto" />
                 </div>
+                <span className="font-bold text-xl text-gray-900">SmarTimis</span>
             </Link>
           </div>
           <div className="flex items-center gap-4">
@@ -141,7 +142,7 @@ const Register = () => {
             </div>
 
             <p className="text-center mt-8 text-xs text-gray-400">
-                © 2024 SmartCity. All rights reserved.
+                © 2024 SmarTimis. All rights reserved.
             </p>
         </div>
       </div>
