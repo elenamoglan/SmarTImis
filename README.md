@@ -44,12 +44,6 @@ npm install
 npm run dev
 ```
 
-**Note:** To apply the latest database features (notifications, likes), run the migration script:
-```bash
-# In the backend directory
-node migrate.js
-```
-
 ### 3. Frontend Setup
 Navigate to the `frontend` directory.
 

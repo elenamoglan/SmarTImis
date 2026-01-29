@@ -25,6 +25,9 @@ const createTables = async () => {
       created_at TIMESTAMPTZ DEFAULT NOW(),
       updated_at TIMESTAMPTZ DEFAULT NOW()
     );
+
+    ALTER TABLE issue_reports ADD COLUMN IF NOT EXISTS likes_count INTEGER DEFAULT 0;
+    ALTER TABLE issue_reports ADD COLUMN IF NOT EXISTS address TEXT;
   `;
 
   const notificationTable = `
@@ -46,9 +49,7 @@ const createTables = async () => {
       PRIMARY KEY (user_id, issue_id)
   );
   
-  ALTER TABLE issue_reports ADD COLUMN IF NOT EXISTS likes_count INTEGER DEFAULT 0;
   `
-
 
   try {
     await db.query(userTable);
