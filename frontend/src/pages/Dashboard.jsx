@@ -198,88 +198,83 @@ const Dashboard = () => {
                 </div>
 
                 <div className="flex flex-col xl:flex-row gap-3 w-full xl:w-auto flex-wrap xl:flex-nowrap items-start xl:items-center justify-end flex-1">
-                    {/* Search */}
-                    <div className="relative group w-full xl:w-auto min-w-[200px] flex-1 xl:flex-none">
-                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-blue-500 transition-colors" size={20} />
-                        <input
-                            type="text"
-                            placeholder="Search issues..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 w-full transition-all"
-                        />
-                    </div>
-
                     {/* Filters Container */}
-                    <div className="flex flex-col gap-2 w-full sm:w-auto">
-                        <div className="flex flex-col sm:flex-row gap-2 w-full">
-                            {/* Status Filter */}
-                            <div className="relative w-full sm:w-auto">
-                                <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
-                                <select
-                                    value={statusFilter}
-                                    onChange={(e) => setStatusFilter(e.target.value)}
-                                    className="w-full sm:w-auto pl-10 pr-8 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 appearance-none cursor-pointer hover:bg-gray-100 transition-colors"
-                                >
-                                    <option value="ALL">All Status</option>
-                                    <option value="OPEN">Open</option>
-                                    <option value="IN_PROGRESS">In Progress</option>
-                                    <option value="RESOLVED">Resolved</option>
-                                </select>
-                            </div>
-
-                            {/* Category Filter */}
-                            <div className="relative w-full sm:w-auto">
-                                <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
-                                <select
-                                    value={categoryFilter}
-                                    onChange={(e) => setCategoryFilter(e.target.value)}
-                                    className="w-full sm:w-auto pl-10 pr-8 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 appearance-none cursor-pointer hover:bg-gray-100 transition-colors"
-                                >
-                                    <option value="ALL">All Categories</option>
-                                    <option value="Infrastructure">Infrastructure</option>
-                                    <option value="Sanitation">Sanitation</option>
-                                    <option value="Traffic">Traffic</option>
-                                    <option value="Environment">Environment</option>
-                                    <option value="Public Safety">Public Safety</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                            </div>
+                    <div className="flex flex-wrap lg:flex-nowrap gap-2 w-full xl:w-auto items-center">
+                        {/* Search */}
+                        <div className="relative group w-full xl:w-auto min-w-[200px] flex-1 xl:flex-none">
+                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-blue-500 transition-colors" size={20} />
+                            <input
+                                type="text"
+                                placeholder="Search issues..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 w-full transition-all"
+                            />
+                        </div>
+                        {/* Status Filter */}
+                        <div className="relative w-full sm:w-auto flex-1 sm:flex-none min-w-[140px]">
+                            <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                            <select
+                                value={statusFilter}
+                                onChange={(e) => setStatusFilter(e.target.value)}
+                                className="w-full pl-10 pr-8 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 appearance-none cursor-pointer hover:bg-gray-100 transition-colors"
+                            >
+                                <option value="ALL">All Status</option>
+                                <option value="OPEN">Open</option>
+                                <option value="IN_PROGRESS">In Progress</option>
+                                <option value="RESOLVED">Resolved</option>
+                            </select>
                         </div>
 
-                        <div className="flex flex-col sm:flex-row gap-2 w-full">
-                            {/* Location Filter */}
-                            <div className="relative w-full sm:w-auto">
-                                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
-                                <input
-                                    type="text"
-                                    placeholder="Location..."
-                                    value={locationFilter}
-                                    onChange={(e) => setLocationFilter(e.target.value)}
-                                    className="pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 w-full transition-colors"
-                                />
-                            </div>
+                        {/* Category Filter */}
+                        <div className="relative w-full sm:w-auto flex-1 sm:flex-none min-w-[160px]">
+                            <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                            <select
+                                value={categoryFilter}
+                                onChange={(e) => setCategoryFilter(e.target.value)}
+                                className="w-full pl-10 pr-8 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 appearance-none cursor-pointer hover:bg-gray-100 transition-colors"
+                            >
+                                <option value="ALL">All Categories</option>
+                                <option value="Infrastructure">Infrastructure</option>
+                                <option value="Sanitation">Sanitation</option>
+                                <option value="Traffic">Traffic</option>
+                                <option value="Environment">Environment</option>
+                                <option value="Public Safety">Public Safety</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
 
-                            {/* Date Filter */}
-                            <div className="flex items-center gap-2 w-full sm:w-auto">
-                                <input
-                                    type="date"
-                                    value={dateFromFilter}
-                                    onChange={(e) => setDateFromFilter(e.target.value)}
-                                    className="py-2.5 px-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 w-full transition-colors"
-                                    placeholder="From date"
-                                    title="From date"
-                                />
-                                <span className="text-gray-400">-</span>
-                                <input
-                                    type="date"
-                                    value={dateToFilter}
-                                    onChange={(e) => setDateToFilter(e.target.value)}
-                                    className="py-2.5 px-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 w-full transition-colors"
-                                    placeholder="To date"
-                                    title="To date"
-                                />
-                            </div>
+                        {/* Location Filter */}
+                        <div className="relative w-full sm:w-auto flex-1 sm:flex-none min-w-[160px]">
+                            <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                            <input
+                                type="text"
+                                placeholder="Location..."
+                                value={locationFilter}
+                                onChange={(e) => setLocationFilter(e.target.value)}
+                                className="pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 w-full transition-colors"
+                            />
+                        </div>
+
+                        {/* Date Filter */}
+                        <div className="flex items-center gap-2 w-full sm:w-auto flex-shrink-0">
+                            <input
+                                type="date"
+                                value={dateFromFilter}
+                                onChange={(e) => setDateFromFilter(e.target.value)}
+                                className="py-2.5 px-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 w-full sm:w-auto transition-colors"
+                                placeholder="From date"
+                                title="From date"
+                            />
+                            <span className="text-gray-400">-</span>
+                            <input
+                                type="date"
+                                value={dateToFilter}
+                                onChange={(e) => setDateToFilter(e.target.value)}
+                                className="py-2.5 px-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 w-full sm:w-auto transition-colors"
+                                placeholder="To date"
+                                title="To date"
+                            />
                         </div>
                     </div>
 

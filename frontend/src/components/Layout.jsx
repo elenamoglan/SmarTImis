@@ -11,7 +11,7 @@ const Layout = ({ children }) => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 flex flex-col">
+        <div className="min-h-screen w-full bg-gray-50 flex flex-col">
             <Navbar />
             <main className="flex-1 w-full mx-auto p-4 md:p-8">
                 {children}
