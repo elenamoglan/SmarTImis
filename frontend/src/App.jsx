@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard';
 import ReportIssue from './pages/ReportIssue';
 import AdminDashboard from './pages/AdminDashboard';
 import LandingPage from './pages/LandingPage';
+import MyHistory from './pages/MyHistory';
 
 const PrivateRoute = ({ children, roles }) => {
   const { user, loading } = useAuth();
@@ -52,6 +53,16 @@ const App = () => {
                 </LayoutWrapper>
               </PrivateRoute>
             } 
+          />
+          <Route
+            path="/my-reports"
+            element={
+              <PrivateRoute roles={['CITIZEN']}>
+                <LayoutWrapper>
+                    <MyHistory />
+                </LayoutWrapper>
+              </PrivateRoute>
+            }
           />
           <Route 
             path="/admin" 
