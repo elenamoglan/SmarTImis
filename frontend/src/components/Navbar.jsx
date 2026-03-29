@@ -120,12 +120,20 @@ const Navbar = () => {
                         </Link>
 
                         {user.role === 'CITIZEN' && (
-                            <Link
-                                to="/report"
-                                className={`px-4 py-2 rounded-full text-sm transition-colors ${isActive('/report')}`}
-                            >
-                                Report Issue
-                            </Link>
+                            <>
+                                <Link
+                                    to="/report"
+                                    className={`px-4 py-2 rounded-full text-sm transition-colors ${isActive('/report')}`}
+                                >
+                                    Report Issue
+                                </Link>
+                                <Link
+                                    to="/my-reports"
+                                    className={`px-4 py-2 rounded-full text-sm transition-colors ${isActive('/my-reports')}`}
+                                >
+                                    My Reports
+                                </Link>
+                            </>
                         )}
 
                         {user.role === 'ADMIN' && (
@@ -239,13 +247,22 @@ const Navbar = () => {
                             View Map
                         </Link>
                         {user.role === 'CITIZEN' && (
-                            <Link
-                                to="/report"
-                                onClick={() => setIsMobileMenuOpen(false)}
-                                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-                            >
-                                Report Issue
-                            </Link>
+                            <>
+                                <Link
+                                    to="/report"
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+                                >
+                                    Report Issue
+                                </Link>
+                                <Link
+                                    to="/my-reports"
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+                                >
+                                    My Reports
+                                </Link>
+                            </>
                         )}
                         {user.role === 'ADMIN' && (
                             <Link

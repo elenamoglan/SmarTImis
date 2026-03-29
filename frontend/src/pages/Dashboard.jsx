@@ -4,6 +4,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { divIcon } from 'leaflet';
 import { Search, Filter, Map as MapIcon, List, ThumbsUp, MapPin, Calendar } from 'lucide-react';
+import TimisoaraWeather from '../components/TimisoaraWeather';
 
 const IssueCard = ({ issue, getStatusColor, onLike }) => {
     return (
@@ -166,6 +167,8 @@ const Dashboard = () => {
 
     return (
         <div className="space-y-6">
+            <TimisoaraWeather />
+
             {/* Header Controls */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
                 <div>
