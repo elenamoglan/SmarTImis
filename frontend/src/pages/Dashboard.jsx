@@ -198,19 +198,20 @@ const Dashboard = () => {
                 </div>
 
                 <div className="flex flex-col xl:flex-row gap-3 w-full xl:w-auto flex-wrap xl:flex-nowrap items-start xl:items-center justify-end flex-1">
+                    {/* Search */}
+                    <div className="relative group w-full xl:w-auto min-w-[200px] flex-1 xl:flex-none">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-blue-500 transition-colors" size={20} />
+                        <input
+                            type="text"
+                            placeholder="Search issues..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 w-full transition-all"
+                        />
+                    </div>
+
                     {/* Filters Container */}
                     <div className="flex flex-wrap lg:flex-nowrap gap-2 w-full xl:w-auto items-center">
-                        {/* Search */}
-                        <div className="relative group w-full xl:w-auto min-w-[200px] flex-1 xl:flex-none">
-                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-blue-500 transition-colors" size={20} />
-                            <input
-                                type="text"
-                                placeholder="Search issues..."
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                className="pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 w-full transition-all"
-                            />
-                        </div>
                         {/* Status Filter */}
                         <div className="relative w-full sm:w-auto flex-1 sm:flex-none min-w-[140px]">
                             <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />

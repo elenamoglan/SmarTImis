@@ -9,27 +9,71 @@ services:
       - "5433:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
+      - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U user -d smartcity"]
       interval: 5s
       timeout: 5s
       retries: 5
 
-  backend:
-    build: ./backend
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  api-gateway:
+    build: ./backend/api-gateway
     ports:
       - "3000:3000"
+    depends_on:
+      - auth-service
+      - issue-service
+      - notification-service
+    volumes:
+      - ./frontend/dist:/app/public
+
+  auth-service:
+    build: ./backend/auth-service
     environment:
-      PORT: 3000
+      PORT: 3001
       DATABASE_URL: postgres://user:password@db:5432/smartcity
       JWT_SECRET: supersecretkey
-      NODE_ENV: development
+      REDIS_URL: redis://redis:6379
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_started
+
+  issue-service:
+    build: ./backend/issue-service
+    environment:
+      PORT: 3002
+      DATABASE_URL: postgres://user:password@db:5432/smartcity
+      JWT_SECRET: supersecretkey
+      REDIS_URL: redis://redis:6379
+      AUTH_SERVICE_URL: http://auth-service:3001
+      NOTIFICATION_SERVICE_URL: http://notification-service:3003
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
     volumes:
-      - ./backend:/app
-      - /app/node_modules
+      - ./backend/uploads:/app/uploads
+
+  notification-service:
+    build: ./backend/notification-service
+    environment:
+      PORT: 3003
+      DATABASE_URL: postgres://user:password@db:5432/smartcity
+      JWT_SECRET: supersecretkey
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
 
 volumes:
   db_data:
