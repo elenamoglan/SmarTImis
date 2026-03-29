@@ -79,6 +79,10 @@ const Dashboard = () => {
     const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'map'
     const [searchQuery, setSearchQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState('ALL');
+    const [categoryFilter, setCategoryFilter] = useState('ALL');
+    const [locationFilter, setLocationFilter] = useState('');
+    const [dateFromFilter, setDateFromFilter] = useState('');
+    const [dateToFilter, setDateToFilter] = useState('');
 
     useEffect(() => {
         fetchIssues();
@@ -156,7 +160,22 @@ const Dashboard = () => {
         const matchesSearch = issue.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
             issue.description.toLowerCase().includes(searchQuery.toLowerCase());
         const matchesStatus = statusFilter === 'ALL' || issue.status === statusFilter;
-        return matchesSearch && matchesStatus;
+        const matchesCategory = categoryFilter === 'ALL' || issue.category === categoryFilter;
+        const matchesLocation = !locationFilter || (issue.address && issue.address.toLowerCase().includes(locationFilter.toLowerCase()));
+
+        let matchesDate = true;
+        if (dateFromFilter || dateToFilter) {
+            const issueDate = new Date(issue.created_at);
+            if (dateFromFilter && new Date(dateFromFilter) > issueDate) matchesDate = false;
+            // set to end of day for dateToFilter to include issues on that day
+            if (dateToFilter) {
+                const toDate = new Date(dateToFilter);
+                toDate.setHours(23, 59, 59, 999);
+                if (toDate < issueDate) matchesDate = false;
+            }
+        }
+
+        return matchesSearch && matchesStatus && matchesCategory && matchesLocation && matchesDate;
     });
 
     if (loading) return (
@@ -191,19 +210,77 @@ const Dashboard = () => {
                         />
                     </div>
 
-                    {/* Filter */}
-                    <div className="relative w-full sm:w-auto">
-                        <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
-                        <select
-                            value={statusFilter}
-                            onChange={(e) => setStatusFilter(e.target.value)}
-                            className="w-full sm:w-auto pl-10 pr-8 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 appearance-none cursor-pointer hover:bg-gray-100 transition-colors"
-                        >
-                            <option value="ALL">All Status</option>
-                            <option value="OPEN">Open</option>
-                            <option value="IN_PROGRESS">In Progress</option>
-                            <option value="RESOLVED">Resolved</option>
-                        </select>
+                    {/* Filters Container */}
+                    <div className="flex flex-col gap-2 w-full sm:w-auto">
+                        <div className="flex flex-col sm:flex-row gap-2 w-full">
+                            {/* Status Filter */}
+                            <div className="relative w-full sm:w-auto">
+                                <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                                <select
+                                    value={statusFilter}
+                                    onChange={(e) => setStatusFilter(e.target.value)}
+                                    className="w-full sm:w-auto pl-10 pr-8 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 appearance-none cursor-pointer hover:bg-gray-100 transition-colors"
+                                >
+                                    <option value="ALL">All Status</option>
+                                    <option value="OPEN">Open</option>
+                                    <option value="IN_PROGRESS">In Progress</option>
+                                    <option value="RESOLVED">Resolved</option>
+                                </select>
+                            </div>
+
+                            {/* Category Filter */}
+                            <div className="relative w-full sm:w-auto">
+                                <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                                <select
+                                    value={categoryFilter}
+                                    onChange={(e) => setCategoryFilter(e.target.value)}
+                                    className="w-full sm:w-auto pl-10 pr-8 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 appearance-none cursor-pointer hover:bg-gray-100 transition-colors"
+                                >
+                                    <option value="ALL">All Categories</option>
+                                    <option value="Infrastructure">Infrastructure</option>
+                                    <option value="Sanitation">Sanitation</option>
+                                    <option value="Traffic">Traffic</option>
+                                    <option value="Environment">Environment</option>
+                                    <option value="Public Safety">Public Safety</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row gap-2 w-full">
+                            {/* Location Filter */}
+                            <div className="relative w-full sm:w-auto">
+                                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                                <input
+                                    type="text"
+                                    placeholder="Location..."
+                                    value={locationFilter}
+                                    onChange={(e) => setLocationFilter(e.target.value)}
+                                    className="pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 w-full transition-colors"
+                                />
+                            </div>
+
+                            {/* Date Filter */}
+                            <div className="flex items-center gap-2 w-full sm:w-auto">
+                                <input
+                                    type="date"
+                                    value={dateFromFilter}
+                                    onChange={(e) => setDateFromFilter(e.target.value)}
+                                    className="py-2.5 px-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 w-full transition-colors"
+                                    placeholder="From date"
+                                    title="From date"
+                                />
+                                <span className="text-gray-400">-</span>
+                                <input
+                                    type="date"
+                                    value={dateToFilter}
+                                    onChange={(e) => setDateToFilter(e.target.value)}
+                                    className="py-2.5 px-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 w-full transition-colors"
+                                    placeholder="To date"
+                                    title="To date"
+                                />
+                            </div>
+                        </div>
                     </div>
 
                     {/* View Toggle */}
