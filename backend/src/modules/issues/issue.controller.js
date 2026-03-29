@@ -4,13 +4,13 @@ const userRepository = require('../users/user.repository');
 
 const createIssue = async (req, res, next) => {
     try {
-        const { title, description, latitude, longitude, address } = req.body;
+        const { title, description, latitude, longitude, address, category } = req.body;
         let image_url = null;
         if (req.file) {
             image_url = `/uploads/${req.file.filename}`;
         }
 
-        if (!title || !description || !latitude || !longitude) {
+        if (!title || !description || !latitude || !longitude || !category) {
             res.status(400);
             throw new Error('Please provide all fields');
         }
@@ -23,6 +23,7 @@ const createIssue = async (req, res, next) => {
             latitude,
             longitude,
             address,
+            category,
         });
 
         // Notify all admins

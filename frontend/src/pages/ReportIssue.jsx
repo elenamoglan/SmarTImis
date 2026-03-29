@@ -21,6 +21,7 @@ const LocationMarker = ({ setPosition, position }) => {
 const ReportIssue = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
+    const [category, setCategory] = useState('');
     const [position, setPosition] = useState(null);
     const [address, setAddress] = useState('');
     const [image, setImage] = useState(null);
@@ -64,9 +65,15 @@ const ReportIssue = () => {
             return;
         }
 
+        if (!category) {
+            setError('Please select a category');
+            return;
+        }
+
         const formData = new FormData();
         formData.append('title', title);
         formData.append('description', description);
+        formData.append('category', category);
         formData.append('latitude', position.lat);
         formData.append('longitude', position.lng);
         formData.append('address', address);
@@ -118,6 +125,24 @@ const ReportIssue = () => {
                                 placeholder="e.g., Pothole on Main Street"
                                 required
                             />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                            <select
+                                value={category}
+                                onChange={(e) => setCategory(e.target.value)}
+                                className="w-full border border-gray-300 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white"
+                                required
+                            >
+                                <option value="" disabled>Select a category</option>
+                                <option value="Infrastructure">Infrastructure</option>
+                                <option value="Sanitation">Sanitation</option>
+                                <option value="Traffic">Traffic</option>
+                                <option value="Environment">Environment</option>
+                                <option value="Public Safety">Public Safety</option>
+                                <option value="Other">Other</option>
+                            </select>
                         </div>
 
                         <div>

@@ -4,6 +4,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { divIcon } from 'leaflet';
 import { Search, Filter, Map as MapIcon, List, ThumbsUp, MapPin, Calendar } from 'lucide-react';
+import TimisoaraWeather from '../components/TimisoaraWeather';
 
 const IssueCard = ({ issue, getStatusColor, onLike }) => {
     return (
@@ -78,6 +79,10 @@ const Dashboard = () => {
     const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'map'
     const [searchQuery, setSearchQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState('ALL');
+    const [categoryFilter, setCategoryFilter] = useState('ALL');
+    const [locationFilter, setLocationFilter] = useState('');
+    const [dateFromFilter, setDateFromFilter] = useState('');
+    const [dateToFilter, setDateToFilter] = useState('');
 
     useEffect(() => {
         fetchIssues();
@@ -155,7 +160,22 @@ const Dashboard = () => {
         const matchesSearch = issue.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
             issue.description.toLowerCase().includes(searchQuery.toLowerCase());
         const matchesStatus = statusFilter === 'ALL' || issue.status === statusFilter;
-        return matchesSearch && matchesStatus;
+        const matchesCategory = categoryFilter === 'ALL' || issue.category === categoryFilter;
+        const matchesLocation = !locationFilter || (issue.address && issue.address.toLowerCase().includes(locationFilter.toLowerCase()));
+
+        let matchesDate = true;
+        if (dateFromFilter || dateToFilter) {
+            const issueDate = new Date(issue.created_at);
+            if (dateFromFilter && new Date(dateFromFilter) > issueDate) matchesDate = false;
+            // set to end of day for dateToFilter to include issues on that day
+            if (dateToFilter) {
+                const toDate = new Date(dateToFilter);
+                toDate.setHours(23, 59, 59, 999);
+                if (toDate < issueDate) matchesDate = false;
+            }
+        }
+
+        return matchesSearch && matchesStatus && matchesCategory && matchesLocation && matchesDate;
     });
 
     if (loading) return (
@@ -166,45 +186,101 @@ const Dashboard = () => {
 
     return (
         <div className="space-y-6">
+            <TimisoaraWeather />
+
             {/* Header Controls */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
-                <div>
+            <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 bg-white p-4 rounded-2xl border border-gray-100 shadow-sm w-full">
+                <div className="flex-shrink-0">
                     <h1 className="text-2xl font-bold text-gray-900">Community Issues</h1>
                     <p className="text-gray-500 text-sm mt-1">
                         Found {filteredIssues.length} reports in your area
                     </p>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                <div className="flex flex-col xl:flex-row gap-3 w-full xl:w-auto flex-wrap xl:flex-nowrap items-start xl:items-center justify-end flex-1">
                     {/* Search */}
-                    <div className="relative group w-full sm:w-auto">
+                    <div className="relative group w-full xl:w-auto min-w-[200px] flex-1 xl:flex-none">
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-blue-500 transition-colors" size={20} />
                         <input
                             type="text"
                             placeholder="Search issues..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 w-full sm:w-64 transition-all"
+                            className="pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 w-full transition-all"
                         />
                     </div>
 
-                    {/* Filter */}
-                    <div className="relative w-full sm:w-auto">
-                        <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
-                        <select
-                            value={statusFilter}
-                            onChange={(e) => setStatusFilter(e.target.value)}
-                            className="w-full sm:w-auto pl-10 pr-8 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 appearance-none cursor-pointer hover:bg-gray-100 transition-colors"
-                        >
-                            <option value="ALL">All Status</option>
-                            <option value="OPEN">Open</option>
-                            <option value="IN_PROGRESS">In Progress</option>
-                            <option value="RESOLVED">Resolved</option>
-                        </select>
+                    {/* Filters Container */}
+                    <div className="flex flex-wrap lg:flex-nowrap gap-2 w-full xl:w-auto items-center">
+                        {/* Status Filter */}
+                        <div className="relative w-full sm:w-auto flex-1 sm:flex-none min-w-[140px]">
+                            <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                            <select
+                                value={statusFilter}
+                                onChange={(e) => setStatusFilter(e.target.value)}
+                                className="w-full pl-10 pr-8 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 appearance-none cursor-pointer hover:bg-gray-100 transition-colors"
+                            >
+                                <option value="ALL">All Status</option>
+                                <option value="OPEN">Open</option>
+                                <option value="IN_PROGRESS">In Progress</option>
+                                <option value="RESOLVED">Resolved</option>
+                            </select>
+                        </div>
+
+                        {/* Category Filter */}
+                        <div className="relative w-full sm:w-auto flex-1 sm:flex-none min-w-[160px]">
+                            <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                            <select
+                                value={categoryFilter}
+                                onChange={(e) => setCategoryFilter(e.target.value)}
+                                className="w-full pl-10 pr-8 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 appearance-none cursor-pointer hover:bg-gray-100 transition-colors"
+                            >
+                                <option value="ALL">All Categories</option>
+                                <option value="Infrastructure">Infrastructure</option>
+                                <option value="Sanitation">Sanitation</option>
+                                <option value="Traffic">Traffic</option>
+                                <option value="Environment">Environment</option>
+                                <option value="Public Safety">Public Safety</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        {/* Location Filter */}
+                        <div className="relative w-full sm:w-auto flex-1 sm:flex-none min-w-[160px]">
+                            <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                            <input
+                                type="text"
+                                placeholder="Location..."
+                                value={locationFilter}
+                                onChange={(e) => setLocationFilter(e.target.value)}
+                                className="pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 w-full transition-colors"
+                            />
+                        </div>
+
+                        {/* Date Filter */}
+                        <div className="flex items-center gap-2 w-full sm:w-auto flex-shrink-0">
+                            <input
+                                type="date"
+                                value={dateFromFilter}
+                                onChange={(e) => setDateFromFilter(e.target.value)}
+                                className="py-2.5 px-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 w-full sm:w-auto transition-colors"
+                                placeholder="From date"
+                                title="From date"
+                            />
+                            <span className="text-gray-400">-</span>
+                            <input
+                                type="date"
+                                value={dateToFilter}
+                                onChange={(e) => setDateToFilter(e.target.value)}
+                                className="py-2.5 px-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 w-full sm:w-auto transition-colors"
+                                placeholder="To date"
+                                title="To date"
+                            />
+                        </div>
                     </div>
 
                     {/* View Toggle */}
-                    <div className="flex bg-gray-100 p-1 rounded-xl border border-gray-200">
+                    <div className="flex bg-gray-100 p-1 rounded-xl border border-gray-200 flex-shrink-0 mt-2 xl:mt-0">
                         <button
                             onClick={() => setViewMode('grid')}
                             className={`p-2 rounded-lg transition-all ${viewMode === 'grid' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
