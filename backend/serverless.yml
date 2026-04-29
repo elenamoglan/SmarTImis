@@ -4,6 +4,9 @@ provider:
   name: aws
   runtime: nodejs18.x
   region: us-east-1
+  apiGateway:
+    binaryMediaTypes:
+      - 'multipart/form-data'
   environment:
     IS_SERVERLESS: "true"
     NODE_ENV: production
@@ -12,7 +15,7 @@ provider:
     DB_HOST: ${env:DB_HOST, 'localhost'}
     DB_PORT: ${env:DB_PORT, '5432'}
     DB_NAME: ${env:DB_NAME, 'smartcity'}
-    JWT_SECRET: ${env:JWT_SECRET, 'supersecretkey'}
+    JWT_SECRET: ${env:JWT_SECRET, 'dev_fallback_secret_for_ci'}
     UPLOADS_BUCKET_NAME: smartcity-uploads-${sls:stage}
   iam:
     role:
@@ -130,6 +133,14 @@ functions:
           path: /{proxy+}
           method: ANY
           cors: true
+
+plugins:
+  - serverless-s3-sync
+
+custom:
+  s3Sync:
+    - bucketName: smartcity-frontend-assets-${sls:stage}
+      localDir: ../frontend/dist
 
 resources:
   Resources:

@@ -23,6 +23,7 @@
     "serverless-http": "^4.0.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.11"
+    "nodemon": "^3.1.11",
+    "serverless-s3-sync": "^3.5.1"
   }
 }
