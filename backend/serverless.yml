@@ -1,0 +1,195 @@
+service: smartcity-backend
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  environment:
+    IS_SERVERLESS: "true"
+    NODE_ENV: production
+    DB_USER: ${env:DB_USER, 'postgres'}
+    DB_PASSWORD: ${env:DB_PASSWORD, 'postgres'}
+    DB_HOST: ${env:DB_HOST, 'localhost'}
+    DB_PORT: ${env:DB_PORT, '5432'}
+    DB_NAME: ${env:DB_NAME, 'smartcity'}
+    JWT_SECRET: ${env:JWT_SECRET, 'supersecretkey'}
+    UPLOADS_BUCKET_NAME: smartcity-uploads-${sls:stage}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - s3:PutObject
+            - s3:GetObject
+            - s3:DeleteObject
+          Resource:
+            - !Sub arn:aws:s3:::smartcity-uploads-${sls:stage}/*
+
+functions:
+  # Auth Actions
+  registerUser:
+    handler: handler.api
+    events:
+      - http:
+          path: /api/auth/register
+          method: post
+          cors: true
+  loginUser:
+    handler: handler.api
+    events:
+      - http:
+          path: /api/auth/login
+          method: post
+          cors: true
+  getCurrentUser:
+    handler: handler.api
+    events:
+      - http:
+          path: /api/auth/me
+          method: get
+          cors: true
+
+  # Issue Actions
+  getIssues:
+    handler: handler.api
+    events:
+      - http:
+          path: /api/issues
+          method: get
+          cors: true
+  createIssue:
+    handler: handler.api
+    events:
+      - http:
+          path: /api/issues
+          method: post
+          cors: true
+  getUserIssues:
+    handler: handler.api
+    events:
+      - http:
+          path: /api/issues/my-issues
+          method: get
+          cors: true
+  getIssueById:
+    handler: handler.api
+    events:
+      - http:
+          path: /api/issues/{id}
+          method: get
+          cors: true
+  likeIssue:
+    handler: handler.api
+    events:
+      - http:
+          path: /api/issues/{id}/like
+          method: post
+          cors: true
+
+  # Admin Actions
+  getAdminStats:
+    handler: handler.api
+    events:
+      - http:
+          path: /api/admin/stats
+          method: get
+          cors: true
+  updateIssueStatus:
+    handler: handler.api
+    events:
+      - http:
+          path: /api/admin/issues/{id}/status
+          method: put
+          cors: true
+
+  # Notification Actions
+  getNotifications:
+    handler: handler.api
+    events:
+      - http:
+          path: /api/notifications
+          method: get
+          cors: true
+  markNotificationRead:
+    handler: handler.api
+    events:
+      - http:
+          path: /api/notifications/{id}/read
+          method: put
+          cors: true
+
+  # Catch-all for any other routes (e.g. static files served by express if needed)
+  app:
+    handler: handler.api
+    events:
+      - http:
+          path: /
+          method: ANY
+          cors: true
+      - http:
+          path: /{proxy+}
+          method: ANY
+          cors: true
+
+resources:
+  Resources:
+    # S3 Bucket for Frontend Assets
+    FrontendBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: smartcity-frontend-assets-${sls:stage}
+        PublicAccessBlockConfiguration:
+          BlockPublicAcls: false
+          BlockPublicPolicy: false
+          IgnorePublicAcls: false
+          RestrictPublicBuckets: false
+        WebsiteConfiguration:
+          IndexDocument: index.html
+          ErrorDocument: index.html
+
+    FrontendBucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket: !Ref FrontendBucket
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal: '*'
+              Action: s3:GetObject
+              Resource: !Sub arn:aws:s3:::${FrontendBucket}/*
+
+    # S3 Bucket for Image Uploads
+    UploadsBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: smartcity-uploads-${sls:stage}
+        PublicAccessBlockConfiguration:
+          BlockPublicAcls: false
+          BlockPublicPolicy: false
+          IgnorePublicAcls: false
+          RestrictPublicBuckets: false
+        CorsConfiguration:
+          CorsRules:
+            - AllowedHeaders:
+                - "*"
+              AllowedMethods:
+                - GET
+                - PUT
+                - POST
+                - DELETE
+                - HEAD
+              AllowedOrigins:
+                - "*"
+
+    UploadsBucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket: !Ref UploadsBucket
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal: '*'
+              Action: s3:GetObject
+              Resource: !Sub arn:aws:s3:::${UploadsBucket}/*
