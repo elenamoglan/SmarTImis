@@ -7,11 +7,11 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://2t8f9kr3th.execute-api.eu-north-1.amazonaws.com/dev',
+        target: 'http://localhost:3000',
         changeOrigin: true,
       },
       '/uploads': {
-        target: 'https://2t8f9kr3th.execute-api.eu-north-1.amazonaws.com/dev',
+        target: 'http://localhost:3000',
         changeOrigin: true,
       }
     }
