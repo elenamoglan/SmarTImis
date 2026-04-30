@@ -104,7 +104,7 @@ functions:
     events:
       - http:
           path: /api/admin/issues/{id}/status
-          method: put
+          method: patch
           cors: true
 
   # Notification Actions
@@ -120,7 +120,7 @@ functions:
     events:
       - http:
           path: /api/notifications/{id}/read
-          method: put
+          method: patch
           cors: true
 
   # Catch-all for any other routes (e.g. static files served by express if needed)
