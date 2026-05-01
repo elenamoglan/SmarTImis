@@ -1,9 +1,11 @@
 service: smartcity-backend
 
+frameworkVersion: '3'
+
 provider:
   name: aws
-  runtime: nodejs20.x
-  region: eu-north-1
+  runtime: nodejs18.x
+  region: us-east-1
   apiGateway:
     binaryMediaTypes:
       - 'multipart/form-data'
@@ -12,7 +14,7 @@ provider:
     NODE_ENV: production
     DB_USER: ${env:DB_USER, 'postgres'}
     DB_PASSWORD: ${env:DB_PASSWORD, 'postgres'}
-    DB_HOST: ${env:DB_HOST, 'smartcity-db.ct0ooui6gqm6.eu-north-1.rds.amazonaws.com'}
+    DB_HOST: ${env:DB_HOST, 'localhost'}
     DB_PORT: ${env:DB_PORT, '5432'}
     DB_NAME: ${env:DB_NAME, 'smartcity'}
     JWT_SECRET: ${env:JWT_SECRET, ''}
