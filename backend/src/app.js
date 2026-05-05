@@ -15,8 +15,13 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
 
+// Determine the correct uploads directory based on the environment
+const uploadDir = process.env.IS_SERVERLESS
+  ? '/tmp/uploads'
+  : path.join(__dirname, '../uploads');
+
 // Static files (uploads)
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+app.use('/uploads', express.static(uploadDir));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes

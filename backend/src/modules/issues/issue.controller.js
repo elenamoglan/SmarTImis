@@ -7,7 +7,8 @@ const createIssue = async (req, res, next) => {
         const { title, description, latitude, longitude, address, category } = req.body;
         let image_url = null;
         if (req.file) {
-            image_url = `/uploads/${req.file.filename}`;
+            // Check if uploaded to S3 (location property exists) or local (filename exists)
+            image_url = req.file.location ? req.file.location : `/uploads/${req.file.filename}`;
         }
 
         if (!title || !description || !latitude || !longitude || !category) {
